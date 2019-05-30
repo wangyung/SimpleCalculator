@@ -1,10 +1,10 @@
 package com.example.simplecalculator
 
-interface DataBinder {
-    fun notify(text: String)
+interface DataObserver<T> {
+    fun onNotify(data: T)
 }
 
-class Calculator(val dataBinder: DataBinder? = null) {
+class Calculator(private val dataObserver: DataObserver<String>? = null) {
 
     private var operation: Operation = Operation.None
 
@@ -13,7 +13,7 @@ class Calculator(val dataBinder: DataBinder? = null) {
     var displayText: String = value1.toString()
         private set(value) {
             field = value
-            dataBinder?.notify(field)
+            dataObserver?.onNotify(field)
         }
 
     private var isValue1Set = false

@@ -18,8 +18,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
 
-    private lateinit var calculator: Calculator
-
     private lateinit var btnZero: Button
     private lateinit var btnOne: Button
     private lateinit var btnTwo: Button
@@ -43,92 +41,53 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        calculator = viewModel.calculator
 
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         resultView = findViewById(R.id.text_result)
 
-        btnZero = findButtonAndBindAction(R.id.btn_zero) {
-            addDigit(0)
-        }
+        btnZero = findButtonAndBindAction(R.id.btn_zero)
 
-        btnOne = findButtonAndBindAction(R.id.btn_one) {
-            addDigit(1)
-        }
+        btnOne = findButtonAndBindAction(R.id.btn_one)
 
-        btnTwo = findButtonAndBindAction(R.id.btn_two) {
-            addDigit(2)
-        }
+        btnTwo = findButtonAndBindAction(R.id.btn_two)
 
-        btnThree = findButtonAndBindAction(R.id.btn_three) {
-            addDigit(3)
-        }
+        btnThree = findButtonAndBindAction(R.id.btn_three)
 
-        btnFour = findButtonAndBindAction(R.id.btn_four) {
-            addDigit(4)
-        }
+        btnFour = findButtonAndBindAction(R.id.btn_four)
 
-        btnFive = findButtonAndBindAction(R.id.btn_five) {
-            addDigit(5)
-        }
+        btnFive = findButtonAndBindAction(R.id.btn_five)
 
-        btnSix = findButtonAndBindAction(R.id.btn_six) {
-            addDigit(6)
-        }
+        btnSix = findButtonAndBindAction(R.id.btn_six)
 
-        btnSeven = findButtonAndBindAction(R.id.btn_seven) {
-            addDigit(7)
-        }
+        btnSeven = findButtonAndBindAction(R.id.btn_seven)
 
-        btnEight = findButtonAndBindAction(R.id.btn_eight) {
-            addDigit(8)
-        }
+        btnEight = findButtonAndBindAction(R.id.btn_eight)
 
-        btnNine = findButtonAndBindAction(R.id.btn_nine) {
-            addDigit(9)
-        }
+        btnNine = findButtonAndBindAction(R.id.btn_nine)
 
-        btnAc = findButtonAndBindAction(R.id.btn_ac) {
-            calculator.reset()
-            resultView.text = calculator.displayText
-        }
+        btnAc = findButtonAndBindAction(R.id.btn_ac)
 
-        btnAdd = findButtonAndBindAction(R.id.btn_add) {
-            calculator.add()
-        }
+        btnAdd = findButtonAndBindAction(R.id.btn_add)
 
-        btnSub = findButtonAndBindAction(R.id.btn_sub) {
-            calculator.substract()
-        }
+        btnSub = findButtonAndBindAction(R.id.btn_sub)
 
-        btnMul = findButtonAndBindAction(R.id.btn_mul) {
-            calculator.multiply()
-        }
+        btnMul = findButtonAndBindAction(R.id.btn_mul)
 
-        btnDiv = findButtonAndBindAction(R.id.btn_div) {
-            calculator.divid()
-        }
+        btnDiv = findButtonAndBindAction(R.id.btn_div)
 
-        btnResult = findButtonAndBindAction(R.id.btn_equal) {
-            calculator.calculate()
-        }
+        btnResult = findButtonAndBindAction(R.id.btn_equal)
+
         viewModel.displayText.observe(this, Observer<String> {
             resultView.text = it
         })
     }
 
-    private inline fun findButtonAndBindAction(@IdRes resId: Int, crossinline action: () -> Unit) =
+    private fun findButtonAndBindAction(@IdRes resId: Int) =
         findViewById<Button>(resId).also {
             it.setOnClickListener {
-                action()
+                viewModel.viewAction(resId)
             }
         }
-
-    private fun addDigit(value: Int) = calculator.appendDigit(value)
-
-    companion object {
-        const val TAG = "MainActivity"
-    }
 }
