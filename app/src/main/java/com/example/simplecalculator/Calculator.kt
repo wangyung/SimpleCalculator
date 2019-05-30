@@ -22,9 +22,9 @@ class Calculator(private val dataObserver: DataObserver<String>? = null) {
         val op = this.operation
         when(op) {
             is Operation.Add -> op.value + value1
-            is Operation.Substract -> op.value - value1
+            is Operation.Subtract -> op.value - value1
             is Operation.Multiply -> op.value * value1
-            is Operation.Divid -> op.value / value1
+            is Operation.Divide -> op.value / value1
             is Operation.None -> { null /* do nothing */ }
         }?.also {
             reset()
@@ -34,11 +34,11 @@ class Calculator(private val dataObserver: DataObserver<String>? = null) {
 
     fun add() = setOperation(Operation.Add(value1))
 
-    fun substract() = setOperation(Operation.Substract(value1))
+    fun subtract() = setOperation(Operation.Subtract(value1))
 
     fun multiply() = setOperation(Operation.Multiply(value1))
 
-    fun divid() = setOperation(Operation.Divid(value1))
+    fun divide() = setOperation(Operation.Divide(value1))
 
     private fun setOperation(operation: Operation) {
         if (isValue1Set) {
@@ -63,8 +63,8 @@ class Calculator(private val dataObserver: DataObserver<String>? = null) {
 
 sealed class Operation {
     class Add(val value: Double) : Operation() // with state
-    class Substract(val value: Double) : Operation()
+    class Subtract(val value: Double) : Operation()
     class Multiply(val value: Double) : Operation()
-    class Divid(val value: Double) : Operation()
+    class Divide(val value: Double) : Operation()
     object None : Operation() // no state
 }

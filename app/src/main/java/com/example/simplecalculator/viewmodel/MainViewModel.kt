@@ -30,9 +30,9 @@ class MainViewModel : ViewModel(), DataObserver<String> {
             R.id.btn_nine -> calculator.appendDigit(9)
             R.id.btn_ac -> calculator.reset()
             R.id.btn_add -> calculator.add()
-            R.id.btn_sub -> calculator.substract()
+            R.id.btn_sub -> calculator.subtract()
             R.id.btn_mul -> calculator.multiply()
-            R.id.btn_div -> calculator.divid()
+            R.id.btn_div -> calculator.divide()
             R.id.btn_equal -> calculator.calculate()
         }
     }
