@@ -2,13 +2,13 @@ package com.example.simplecalculator
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.IdRes
-import androidx.annotation.IntegerRes
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.example.simplecalculator.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,7 +16,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var resultView: TextView
 
-    private val calculator: Calculator = Calculator()
+    private lateinit var viewModel: MainViewModel
+
+    private lateinit var calculator: Calculator
 
     private lateinit var btnZero: Button
     private lateinit var btnOne: Button
@@ -39,6 +41,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        calculator = viewModel.calculator
 
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -87,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
         btnAc = findButtonAndBindAction(R.id.btn_ac) {
             calculator.reset()
-            resultView.text = calculator.value1.toString()
+            resultView.text = calculator.displayText
         }
 
         btnAdd = findButtonAndBindAction(R.id.btn_add) {
@@ -107,8 +112,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnResult = findButtonAndBindAction(R.id.btn_equal) {
-            resultView.text = calculator.calculate().toString()
+            calculator.calculate()
         }
+        viewModel.displayText.observe(this, Observer<String> {
+            resultView.text = it
+        })
     }
 
     private inline fun findButtonAndBindAction(@IdRes resId: Int, crossinline action: () -> Unit) =
@@ -118,31 +126,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private fun addDigit(value: Int) {
-        calculator.appendDigit(value)
-        resultView.text = calculator.value1.toString()
-//        try {
-//        } catch (e: IllegalAccessError) {
-//            Log.w(TAG, "Incorrect state")
-//        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
+    private fun addDigit(value: Int) = calculator.appendDigit(value)
 
     companion object {
         const val TAG = "MainActivity"

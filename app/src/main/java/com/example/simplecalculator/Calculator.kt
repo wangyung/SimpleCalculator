@@ -1,26 +1,35 @@
 package com.example.simplecalculator
 
-class Calculator {
+interface DataBinder {
+    fun notify(text: String)
+}
+
+class Calculator(val dataBinder: DataBinder? = null) {
 
     private var operation: Operation = Operation.None
 
-    var value1 = 0.0
-        private set
+    private var value1 = 0.0
+
+    var displayText: String = value1.toString()
+        private set(value) {
+            field = value
+            dataBinder?.notify(field)
+        }
 
     private var isValue1Set = false
 
-    @Throws
-    fun calculate(): Double {
+    fun calculate() {
         val op = this.operation
-        val result = when(op) {
+        when(op) {
             is Operation.Add -> op.value + value1
             is Operation.Substract -> op.value - value1
             is Operation.Multiply -> op.value * value1
             is Operation.Divid -> op.value / value1
-            is Operation.None -> throw IllegalAccessError("Need operation")
+            is Operation.None -> { null /* do nothing */ }
+        }?.also {
+            reset()
+            displayText = it.toString()
         }
-        reset()
-        return result
     }
 
     fun add() = setOperation(Operation.Add(value1))
@@ -41,12 +50,14 @@ class Calculator {
     fun appendDigit(value: Int) {
         this.value1 = this.value1 * 10 + value
         isValue1Set = true
+        displayText = value1.toString()
     }
 
     fun reset() {
         value1 = 0.0
         operation = Operation.None
         isValue1Set = false
+        displayText = value1.toString()
     }
 }
 
