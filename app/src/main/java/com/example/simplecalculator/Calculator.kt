@@ -39,7 +39,7 @@ class Calculator(private val dataObserver: DataObserver<String>? = null) {
     fun divide() = setOperation(Operation.Divide(displayText.toDouble()))
 
     fun point() {
-        if (displayText.isNotEmpty()) {
+        if (displayText.isNotEmpty() && !displayText.contains(".")) {
             displayText += "."
         }
     }
