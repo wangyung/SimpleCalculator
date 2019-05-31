@@ -8,56 +8,58 @@ class Calculator(private val dataObserver: DataObserver<String>? = null) {
 
     private var operation: Operation = Operation.None
 
-    private var value1 = 0.0
-
-    var displayText: String = value1.toString()
+    var displayText: String = ""
         private set(value) {
             field = value
             dataObserver?.onNotify(field)
         }
 
-    private var isValue1Set = false
+    private var isValueSet = false
 
     fun calculate() {
         val op = this.operation
         when(op) {
-            is Operation.Add -> op.value + value1
-            is Operation.Subtract -> op.value - value1
-            is Operation.Multiply -> op.value * value1
-            is Operation.Divide -> op.value / value1
-            is Operation.None -> { null /* do nothing */ }
+            is Operation.Add -> op.value + displayText.toDouble()
+            is Operation.Subtract -> op.value - displayText.toDouble()
+            is Operation.Multiply -> op.value * displayText.toDouble()
+            is Operation.Divide -> op.value / displayText.toDouble()
+            else -> { null /* do nothing */ }
         }?.also {
             reset()
             displayText = it.toString()
         }
     }
 
-    fun add() = setOperation(Operation.Add(value1))
+    fun add() = setOperation(Operation.Add(displayText.toDouble()))
 
-    fun subtract() = setOperation(Operation.Subtract(value1))
+    fun subtract() = setOperation(Operation.Subtract(displayText.toDouble()))
 
-    fun multiply() = setOperation(Operation.Multiply(value1))
+    fun multiply() = setOperation(Operation.Multiply(displayText.toDouble()))
 
-    fun divide() = setOperation(Operation.Divide(value1))
+    fun divide() = setOperation(Operation.Divide(displayText.toDouble()))
+
+    fun point() {
+        if (displayText.isNotEmpty()) {
+            displayText += "."
+        }
+    }
 
     private fun setOperation(operation: Operation) {
-        if (isValue1Set) {
+        if (isValueSet) {
             this.operation = operation
-            value1 = 0.0
+            displayText = ""
         }
     }
 
     fun appendDigit(value: Int) {
-        this.value1 = this.value1 * 10 + value
-        isValue1Set = true
-        displayText = value1.toString()
+        displayText += value.toString()
+        isValueSet = true
     }
 
     fun reset() {
-        value1 = 0.0
         operation = Operation.None
-        isValue1Set = false
-        displayText = value1.toString()
+        isValueSet = false
+        displayText = ""
     }
 }
 

@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnMul: Button
     private lateinit var btnDiv: Button
     private lateinit var btnResult: Button
+    private lateinit var btnPoint: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +80,8 @@ class MainActivity : AppCompatActivity() {
         btnDiv = findButtonAndBindAction(R.id.btn_div)
 
         btnResult = findButtonAndBindAction(R.id.btn_equal)
+
+        btnPoint = findButtonAndBindAction(R.id.btn_dot)
 
         viewModel.displayText.observe(this, Observer<String> {
             resultView.text = it
